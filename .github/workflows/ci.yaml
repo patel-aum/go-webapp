@@ -27,10 +27,8 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
     - name: Run golangci-lint
-      uses: golangci/golangci-lint-action@v6
-      with:
-        version: v1.56.2
-
+      uses: golangci/golangci-lint-action@v6.1.1
+              
   push:
     runs-on: ubuntu-latest
     needs: build
