@@ -5,7 +5,7 @@ import (
     "fmt"
     "log"
     "net/http"
-    "io/ioutil"
+    "io"
     "sort"
     "github.com/gorilla/mux"
 )
@@ -45,7 +45,7 @@ func (c *RealGithubClient) GetRepos(username string) ([]Repo, error) {
             return nil, fmt.Errorf("error: %s", resp.Status)
         }
 
-        body, err := ioutil.ReadAll(resp.Body)
+        body, err := io.ReadAll(resp.Body)
         if err != nil {
             return nil, err
         }
