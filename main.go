@@ -10,6 +10,7 @@ import (
     "github.com/gorilla/mux"
 )
 
+// Define Repo structure for GitHub API response
 type Repo struct {
     Name        string `json:"name"`
     HtmlUrl     string `json:"html_url"`
@@ -17,12 +18,15 @@ type Repo struct {
     Stars       int    `json:"stargazers_count"`
 }
 
+// Define the GithubClient interface
 type GithubClient interface {
     GetRepos(username string) ([]Repo, error)
 }
 
+// Define RealGithubClient struct to implement the GithubClient interface
 type RealGithubClient struct{}
 
+// RealGithubClient's GetRepos method for fetching GitHub repositories
 func (c *RealGithubClient) GetRepos(username string) ([]Repo, error) {
     var allRepos []Repo
     page := 1
@@ -69,12 +73,14 @@ func (c *RealGithubClient) GetRepos(username string) ([]Repo, error) {
     return allRepos, nil
 }
 
+// App struct contains the GithubClient
 type App struct {
     GithubClient GithubClient
 }
 
+// HomeHandler handles requests to the root page
 func (app *App) HomeHandler(w http.ResponseWriter, r *http.Request) {
-    username := "patel-aum"  // Replace with your GitHub username
+    username := "patel-aum"
     repos, err := app.GithubClient.GetRepos(username)
     if err != nil {
         http.Error(w, "Unable to fetch GitHub repos", http.StatusInternalServerError)
@@ -105,6 +111,9 @@ func (app *App) HomeHandler(w http.ResponseWriter, r *http.Request) {
             .repo-card a:hover { text-decoration: underline; }
             .stars { font-size: 14px; color: #666; display: flex; align-items: center; margin-bottom: 10px; }
             .stars svg { margin-right: 5px; }
+            .about-link { text-align: center; margin-top: 20px; }
+            .about-link a { font-size: 16px; color: #0366d6; text-decoration: none; }
+            .about-link a:hover { text-decoration: underline; }
         </style>
     </head>
     <body>
@@ -127,6 +136,49 @@ func (app *App) HomeHandler(w http.ResponseWriter, r *http.Request) {
 
     fmt.Fprintf(w, `
         </div>
+        <div class="about-link">
+            <a href="/about">Learn more about Aum Patel</a>
+        </div>
+    </body>
+    </html>
+    `)
+}
+
+// AboutHandler handles requests to the /about page
+func (app *App) AboutHandler(w http.ResponseWriter, r *http.Request) {
+    fmt.Fprintf(w, `
+    <html>
+    <head>
+        <style>
+            body { font-family: Arial, sans-serif; background-color: #f5f5f5; margin: 0; padding: 20px; }
+            h1 { color: #333; text-align: center; }
+            .about-section { max-width: 800px; margin: auto; background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); }
+            p { font-size: 16px; color: #555; }
+        </style>
+    </head>
+    <body>
+        <div class="about-section">
+            <h1>About Aum Patel</h1>
+            <p>
+                I am a 2024 Computer Science graduate with Certified Kubernetes Administrator (CKA) and Certified Penetration Tester (EJPTv2) certifications.
+                With 6 months of hands-on DevOps experience, I specialize in containerization, cloud platforms (AWS, Azure), cybersecurity, and CI/CD practices.
+                I am proficient in Docker, Kubernetes, Terraform, and more.
+            </p>
+            <p>
+                I have a strong foundation in infrastructure automation and security best practices, with experience working on on-premises bank servers, improving security measures, and automating security checks.
+                I am passionate about combining practical knowledge and fresh perspectives in cloud-native solutions.
+            </p>
+            <p>
+                <strong>Certifications:</strong>
+                <ul>
+                    <li>Certified Kubernetes Administrator (CKA) - Linux Foundation</li>
+                    <li>Certified Penetration Tester (EJPTv2) - INE (eLearnSecurity)</li>
+                    <li>AWS Academy Cloud Security</li>
+                    <li>Database Management System - NPTEL</li>
+                    <li>Salesforce Developer Virtual Internship</li>
+                </ul>
+            </p>
+        </div>
     </body>
     </html>
     `)
@@ -139,7 +191,10 @@ func main() {
 
     r := mux.NewRouter()
     r.HandleFunc("/", app.HomeHandler).Methods("GET")
+    r.HandleFunc("/about", app.AboutHandler).Methods("GET")
 
     log.Println("Server is starting on port 8080...")
     log.Fatal(http.ListenAndServe(":8080", r))
 }
+
+
