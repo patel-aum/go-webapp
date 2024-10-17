@@ -15,7 +15,7 @@ jobs:
     - name: Setup GO
       uses: actions/setup-go@v4
       with: 
-        go-version: '1.21'
+        go-version: '1.23'
     - name: Build
       run: go build -o go-web-app
     - name: Testing
@@ -27,10 +27,14 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
     - name: Run golangci-lint
-      uses: golangci/golangci-lint-action@v3
+      uses: golangci/golangci-lint-action@v6.1.1
       with:
-        version: latest
-
+        install-mode: binary
+        only-new-issues: false
+        skip-cache: false
+        skip-save-cache: false
+        problem-matchers: false
+        cache-invalidation-interval: 7
   push:
     runs-on: ubuntu-latest
     needs: [build, code-quality]
