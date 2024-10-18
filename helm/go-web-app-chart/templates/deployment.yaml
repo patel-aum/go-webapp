@@ -18,7 +18,7 @@ spec:
         app: go-web-app
     spec:
       containers:
-      - image: patelaum/go-webapp:{{ .Values.image.tag }}
+      - image: patelaum/go-web-app:{{ .Values.image.tag }}
         name: go-webapp
         ports:
         - containerPort: 8080
