@@ -4,10 +4,10 @@ COPY go.mod .
 RUN go mod download
 COPY . .
 RUN go build -o main .
-#EXPOSE 8080
+#EXPOSE 8081
 #CMD ["./main"]
 
 FROM gcr.io/distroless/base
 COPY --from=base /app/main .
-EXPOSE 8080
+EXPOSE 8081
 CMD ["./main"]

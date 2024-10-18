@@ -193,8 +193,8 @@ func main() {
     r.HandleFunc("/", app.HomeHandler).Methods("GET")
     r.HandleFunc("/about", app.AboutHandler).Methods("GET")
 
-    log.Println("Server is starting on port 8080...")
-    log.Fatal(http.ListenAndServe(":8080", r))
+    log.Println("Server is starting on port 8081...")
+    log.Fatal(http.ListenAndServe(":8081", r))
 }
 
 
